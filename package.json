@@ -1,0 +1,18 @@
+{
+  "name": "web-tools",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "koizumin <koizumi.ryo.dev@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "parcel ./index.html",
+    "build": "parcel build ./index.html"
+  },
+  "devDependencies": {
+    "elm": "^0.19.0-no-deps",
+    "elm-format": "^0.8.1",
+    "elm-hot": "^1.1.0",
+    "node-elm-compiler": "^5.0.3",
+    "parcel-bundler": "^1.12.3"
+  }
+}
