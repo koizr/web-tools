@@ -16,10 +16,12 @@ type alias Model =
     { text : String }
 
 
+{-| 行ごとに分割したリストに対して関数を適用する。空行は削除される
+-}
 byLine : (List String -> List String) -> String -> String
 byLine f s =
     s
-        |> String.split "\n"
+        |> String.lines
         |> List.filter (String.isEmpty >> not)
         |> f
         |> String.join "\n"
