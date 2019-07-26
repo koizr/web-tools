@@ -6,7 +6,6 @@ import Html.Events exposing (..)
 import List
 import Set
 import String
-import Util exposing (compose)
 
 
 
@@ -21,7 +20,7 @@ byLine : (List String -> List String) -> String -> String
 byLine f s =
     s
         |> String.split "\n"
-        |> List.filter (compose not String.isEmpty)
+        |> List.filter (String.isEmpty >> not)
         |> f
         |> String.join "\n"
 
@@ -65,7 +64,7 @@ update msg model =
         SortDesc ->
             let
                 sorted =
-                    model.text |> byLine (compose List.reverse List.sort)
+                    model.text |> byLine (List.sort >> List.reverse)
             in
             ( { model | text = sorted }, Cmd.none )
 
