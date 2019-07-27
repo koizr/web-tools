@@ -103,6 +103,7 @@ view model =
     div []
         [ div [ class "left-pane" ]
             [ textarea [ value model.input, cols 100, rows 50, onInput Input ] []
+            , div [] [ text (model.input |> numOfLine |> String.fromInt) ]
             , div
                 []
                 [ checkbox [ onCheck ChangeUnique ] "unique"
@@ -115,5 +116,17 @@ view model =
             ]
         , div [ class "right-pane" ]
             [ textarea [ value model.output, cols 100, rows 50, readonly True ] []
+            , div [] [ text (model.output |> numOfLine |> String.fromInt) ]
             ]
         ]
+
+
+{-| 行数を返す。 1 文字もないときは 0 行とする
+-}
+numOfLine : String -> Int
+numOfLine s =
+    if String.isEmpty s then
+        0
+
+    else
+        s |> String.lines |> List.length
