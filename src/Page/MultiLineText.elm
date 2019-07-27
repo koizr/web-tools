@@ -4,8 +4,10 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import List
+import Page.Element exposing (..)
 import Set
 import String
+import Util exposing (applyThen)
 
 
 
@@ -13,7 +15,16 @@ import String
 
 
 type alias Model =
-    { text : String }
+    { input : String
+    , output : String
+    , order : Order
+    , unique : Bool
+    }
+
+
+type Order
+    = Asc
+    | Desc
 
 
 {-| 行ごとに分割したリストに対して関数を適用する。空行は削除される
@@ -29,7 +40,11 @@ byLine f s =
 
 init : Model
 init =
-    { text = "" }
+    { input = ""
+    , output = ""
+    , order = Asc
+    , unique = False
+    }
 
 
 
@@ -38,37 +53,37 @@ init =
 
 type Msg
     = Input String
-    | Unique
-    | Sort
-    | SortDesc
+    | ChangeUnique Bool
+    | ChangeOrder Order
+    | Convert
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Input s ->
-            ( { text = s }, Cmd.none )
+            ( { model | input = s }, Cmd.none )
 
-        Unique ->
-            let
-                uniqued =
-                    model.text |> byLine unique
-            in
-            ( { model | text = uniqued }, Cmd.none )
+        ChangeUnique enabled ->
+            ( { model | unique = enabled }, Cmd.none )
 
-        Sort ->
-            let
-                sorted =
-                    model.text |> byLine List.sort
-            in
-            ( { model | text = sorted }, Cmd.none )
+        ChangeOrder ord ->
+            ( { model | order = ord }, Cmd.none )
 
-        SortDesc ->
+        Convert ->
             let
-                sorted =
-                    model.text |> byLine (List.sort >> List.reverse)
+                sort =
+                    case model.order of
+                        Asc ->
+                            List.sort
+
+                        Desc ->
+                            List.sort >> List.reverse
+
+                output =
+                    applyThen model.unique (byLine unique) model.input |> byLine sort
             in
-            ( { model | text = sorted }, Cmd.none )
+            ( { model | output = output }, Cmd.none )
 
 
 {-| 重複行を削除する
@@ -86,11 +101,19 @@ unique s =
 view : Model -> Html Msg
 view model =
     div []
-        [ textarea [ value model.text, cols 100, rows 50, onInput Input ] []
-        , div
-            []
-            [ button [ onClick Unique ] [ text "unique" ]
-            , button [ onClick Sort ] [ text "sort" ]
-            , button [ onClick SortDesc ] [ text "sort (DESC)" ]
+        [ div [ class "left-pane" ]
+            [ textarea [ value model.input, cols 100, rows 50, onInput Input ] []
+            , div
+                []
+                [ checkbox [ onCheck ChangeUnique ] "unique"
+                , div []
+                    [ radio [ name "oder", onClick (ChangeOrder Asc), checked (model.order == Asc) ] "Sort"
+                    , radio [ name "oder", onClick (ChangeOrder Desc), checked (model.order == Desc) ] "Sort(DESC)"
+                    ]
+                , button [ onClick Convert ] [ text "Convert" ]
+                ]
+            ]
+        , div [ class "right-pane" ]
+            [ textarea [ value model.output, cols 100, rows 50, readonly True ] []
             ]
         ]
