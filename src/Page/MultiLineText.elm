@@ -108,8 +108,8 @@ view model =
                 []
                 [ checkbox [ onCheck ChangeUnique ] "unique"
                 , div []
-                    [ radio [ name "oder", onClick (ChangeOrder Asc), checked (model.order == Asc) ] "Sort"
-                    , radio [ name "oder", onClick (ChangeOrder Desc), checked (model.order == Desc) ] "Sort(DESC)"
+                    [ radio [ name "order", onClick (ChangeOrder Asc), checked (model.order == Asc) ] "Sort"
+                    , radio [ name "order", onClick (ChangeOrder Desc), checked (model.order == Desc) ] "Sort(DESC)"
                     ]
                 , button [ onClick Convert ] [ text "Convert" ]
                 ]
