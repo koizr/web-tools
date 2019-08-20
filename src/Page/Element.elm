@@ -17,7 +17,7 @@ radio =
 
 labeledElement : String -> List (Attribute msg) -> String -> Html msg
 labeledElement type__ attr labelText =
-    label []
-        [ input (type_ type__ :: attr) []
-        , text labelText
+    label [ class type__ ]
+        [ input (type_ type__ :: class type__ :: attr) []
+        , text (" " ++ labelText)
         ]

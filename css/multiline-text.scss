@@ -1,0 +1,10 @@
+.multiline-text {
+  display: flex;
+  justify-content: space-around;
+}
+
+.multiline-text__controll-menu {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

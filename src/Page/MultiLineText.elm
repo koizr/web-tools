@@ -100,22 +100,26 @@ unique s =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ div [ class "left-pane" ]
-            [ textarea [ value model.input, cols 100, rows 50, onInput Input ] []
+    div [ class "multiline-text" ]
+        [ div [ class "field" ]
+            [ textarea [ class "textarea", value model.input, cols 60, rows 30, onInput Input ] []
             , div [] [ text (model.input |> numOfLine |> String.fromInt) ]
-            , div
-                []
+            ]
+        , div [ class "multiline-text__controll-menu" ]
+            [ div [ class "field" ]
                 [ checkbox [ onCheck ChangeUnique ] "unique"
-                , div []
-                    [ radio [ name "order", onClick (ChangeOrder Asc), checked (model.order == Asc) ] "Sort"
-                    , radio [ name "order", onClick (ChangeOrder Desc), checked (model.order == Desc) ] "Sort(DESC)"
-                    ]
-                , button [ onClick Convert ] [ text "Convert" ]
+                ]
+            , div [ class "field" ]
+                [ radio [ name "order", onClick (ChangeOrder Asc), checked (model.order == Asc) ] "Sort"
+                , br [] []
+                , radio [ name "order", onClick (ChangeOrder Desc), checked (model.order == Desc) ] "Sort(DESC)"
+                ]
+            , div [ class "field" ]
+                [ button [ class "button is-primary", onClick Convert ] [ text "Convert" ]
                 ]
             ]
-        , div [ class "right-pane" ]
-            [ textarea [ value model.output, cols 100, rows 50, readonly True ] []
+        , div []
+            [ textarea [ class "textarea", value model.output, cols 60, rows 30, readonly True ] []
             , div [] [ text (model.output |> numOfLine |> String.fromInt) ]
             ]
         ]
