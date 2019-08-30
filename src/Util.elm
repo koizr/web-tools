@@ -1,4 +1,4 @@
-module Util exposing (applyThen)
+module Util exposing (applyThen, flip)
 
 {-| 便利関数たち
 -}
@@ -13,3 +13,10 @@ applyThen condition f a =
 
     else
         a
+
+
+{-| 2 つの引数を取る関数の 1 つ目の引数と 2 つ目の引数を入れ替える
+-}
+flip : (a -> b -> c) -> (b -> a -> c)
+flip f =
+    \a b -> f b a

@@ -7,7 +7,7 @@ import List
 import Page.Element exposing (..)
 import Set
 import String
-import Util exposing (applyThen)
+import Util exposing (applyThen, flip)
 
 
 
@@ -103,7 +103,7 @@ view model =
     div [ class "multiline-text" ]
         [ div [ class "field" ]
             [ textarea [ class "textarea", value model.input, cols 60, rows 30, onInput Input ] []
-            , div [] [ text (model.input |> numOfLine |> String.fromInt) ]
+            , div [ style "text-align" "right" ] [ text (numOfLineText model.input) ]
             ]
         , div [ class "multiline-text__controll-menu" ]
             [ div [ class "field" ]
@@ -120,7 +120,7 @@ view model =
             ]
         , div []
             [ textarea [ class "textarea", value model.output, cols 60, rows 30, readonly True ] []
-            , div [] [ text (model.output |> numOfLine |> String.fromInt) ]
+            , div [ style "text-align" "right" ] [ text (numOfLineText model.output) ]
             ]
         ]
 
@@ -134,3 +134,8 @@ numOfLine s =
 
     else
         s |> String.lines |> List.length
+
+
+numOfLineText : String -> String
+numOfLineText s =
+    s |> numOfLine |> String.fromInt |> (flip (++) <| " lines")
