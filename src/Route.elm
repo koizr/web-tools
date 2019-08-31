@@ -7,6 +7,7 @@ import Url.Parser exposing (..)
 type Route
     = Top
     | MultiLineText
+    | RandomText
 
 
 parse : Url -> Maybe Route
@@ -19,4 +20,5 @@ parser =
     oneOf
         [ map Top top
         , map MultiLineText (s "text")
+        , map RandomText (s "random")
         ]
