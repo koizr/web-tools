@@ -3,6 +3,7 @@ module Page.RandomText exposing (Model, Msg, init, update, view)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import List
 import Page.Element exposing (..)
 import Random
 import Random.Char exposing (english)
@@ -16,20 +17,20 @@ import String
 
 type alias Model =
     { length : Int
-    , randomText : String
+    , randomTexts : List String
     }
 
 
 type Msg
     = InputLength String
     | Shuffle
-    | Generate String
+    | GenerateRandomTexts (List String)
 
 
 init : Model
 init =
     { length = 30
-    , randomText = ""
+    , randomTexts = []
     }
 
 
@@ -54,16 +55,16 @@ update msg model =
 
         Shuffle ->
             ( model
-            , Random.generate Generate (randomTextGenerator model.length)
+            , Random.generate GenerateRandomTexts (randomTextsGenerator model.length)
             )
 
-        Generate randomText ->
-            ( { model | randomText = randomText }, Cmd.none )
+        GenerateRandomTexts randomTexts ->
+            ( { model | randomTexts = randomTexts }, Cmd.none )
 
 
-randomTextGenerator : Int -> Random.Generator String
-randomTextGenerator length =
-    string length english
+randomTextsGenerator : Int -> Random.Generator (List String)
+randomTextsGenerator length =
+    Random.list 10 (string length english)
 
 
 
@@ -95,13 +96,18 @@ view model =
                 ]
             ]
         , section [ class "section" ]
-            (case model.randomText of
-                "" ->
+            (case model.randomTexts of
+                [] ->
                     []
 
                 _ ->
                     [ div [ class "list is-hoverable" ]
-                        [ a [ class "list-item" ] [ text model.randomText ] ]
+                        (List.map viewRandomText model.randomTexts)
                     ]
             )
         ]
+
+
+viewRandomText : String -> Html Msg
+viewRandomText randomText =
+    a [ class "list-item" ] [ text randomText ]
