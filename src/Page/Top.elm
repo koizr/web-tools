@@ -39,4 +39,5 @@ view : Model -> Html Msg
 view model =
     ul []
         [ li [] [ a [ href "text" ] [ text "テキスト編集" ] ]
+        , li [] [ a [ href "random" ] [ text "文字列ランダム生成" ] ]
         ]

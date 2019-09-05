@@ -6,6 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Http
 import Page.MultiLineText
+import Page.RandomText
 import Page.Top
 import Route exposing (Route)
 import Url
@@ -42,6 +43,7 @@ type Page
     = NotFound
     | Top Page.Top.Model
     | MultiLineText Page.MultiLineText.Model
+    | RandomText Page.RandomText.Model
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
@@ -59,6 +61,7 @@ type Msg
     | UrlChanged Url.Url
     | TopMsg Page.Top.Msg
     | MultiLineTextMsg Page.MultiLineText.Msg
+    | RandomTextMsg Page.RandomText.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -103,6 +106,20 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
+        RandomTextMsg pageMsg ->
+            case model.page of
+                RandomText pageModel ->
+                    let
+                        ( newModel, newCmd ) =
+                            Page.RandomText.update pageMsg pageModel
+                    in
+                    ( { model | page = RandomText newModel }
+                    , Cmd.map RandomTextMsg newCmd
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
+
 
 goTo : Maybe Route -> Model -> ( Model, Cmd Msg )
 goTo maybeRoute model =
@@ -115,6 +132,9 @@ goTo maybeRoute model =
 
         Just Route.MultiLineText ->
             ( { model | page = MultiLineText Page.MultiLineText.init }, Cmd.none )
+
+        Just Route.RandomText ->
+            ( { model | page = RandomText Page.RandomText.init }, Cmd.none )
 
 
 
@@ -134,16 +154,25 @@ view : Model -> Browser.Document Msg
 view model =
     { title = "Web tools"
     , body =
-        [ div [] [ a [ href "/" ] [ text "トップへ戻る" ] ]
-        , case model.page of
-            NotFound ->
-                viewNotFound
+        [ div [ class "container" ]
+            [ nav [ class "navbar" ]
+                [ a [ href "/" ] [ text "トップへ戻る" ]
+                ]
+            , section [ class "section" ]
+                [ case model.page of
+                    NotFound ->
+                        viewNotFound
 
-            Top pageModel ->
-                Page.Top.view pageModel |> Html.map TopMsg
+                    Top pageModel ->
+                        Page.Top.view pageModel |> Html.map TopMsg
 
-            MultiLineText pageModel ->
-                Page.MultiLineText.view pageModel |> Html.map MultiLineTextMsg
+                    MultiLineText pageModel ->
+                        Page.MultiLineText.view pageModel |> Html.map MultiLineTextMsg
+
+                    RandomText pageModel ->
+                        Page.RandomText.view pageModel |> Html.map RandomTextMsg
+                ]
+            ]
         ]
     }
 
