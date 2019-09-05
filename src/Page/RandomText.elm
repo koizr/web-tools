@@ -9,6 +9,7 @@ import Random
 import Random.Char exposing (english)
 import Random.String exposing (string)
 import String
+import Util.Clipboard as CB
 
 
 
@@ -101,7 +102,7 @@ view model =
                     []
 
                 _ ->
-                    [ div [ class "list is-hoverable" ]
+                    [ ul [ class "list is-hoverable" ]
                         (List.map viewRandomText model.randomTexts)
                     ]
             )
@@ -110,4 +111,9 @@ view model =
 
 viewRandomText : String -> Html Msg
 viewRandomText randomText =
-    a [ class "list-item" ] [ text randomText ]
+    li
+        [ class "list-item"
+        , CB.copyToClipboarcOnClick
+        , CB.dataClipboardTarget randomText
+        ]
+        [ span [ id randomText ] [ text randomText ] ]
