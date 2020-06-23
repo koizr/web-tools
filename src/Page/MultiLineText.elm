@@ -1,4 +1,4 @@
-module Page.MultiLineText exposing (Model, Msg, init, update, view)
+module Page.MultiLineText exposing (Model, Msg, byLine, init, numOfLine, unique, update, view)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
