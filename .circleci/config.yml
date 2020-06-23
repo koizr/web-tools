@@ -1,0 +1,44 @@
+version: 2
+jobs:
+  build-and-test:
+    docker:
+      - image: circleci/node:14.4
+    steps:
+      - checkout
+
+      - restore_cache:
+          name: Restore npm packages cache
+          keys:
+            - yarn-packages-v1-{{ checksum "yarn.lock" }}
+            - yarn-packages-v1-
+      - run:
+          name: Install npm packages
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save npm packages cache
+          key: yarn-packages-v1-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+
+      - restore_cache:
+          name: Restore elm packages cache
+          keys:
+            - elm-stuff-v1-{{ checksum "elm.json" }}
+            - elm-stuff-v1-
+      - run:
+          name: test
+          command: yarn test
+      - run:
+          name: build
+          command: yarn build
+      - save_cache:
+          name: Save elm packages cache
+          key: elm-stuff-v1-{{ checksum "elm.json" }}
+          paths:
+            - ~/.elm
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build-and-test
