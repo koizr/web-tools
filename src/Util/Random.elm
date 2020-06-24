@@ -47,7 +47,7 @@ randomLetter s =
 
         randomIndex : Random.Generator Int
         randomIndex =
-            Random.int 0 (String.length s)
+            Random.int 0 (String.length s - 1)
     in
     Random.map getAtOrEmpty randomIndex
 
