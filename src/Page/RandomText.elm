@@ -6,10 +6,9 @@ import Html.Events exposing (..)
 import List
 import Page.Element exposing (..)
 import Random
-import Random.Char exposing (english)
-import Random.String exposing (string)
 import String
 import Util.Clipboard as CB
+import Util.Random exposing (Config, randomText)
 
 
 
@@ -17,20 +16,75 @@ import Util.Clipboard as CB
 
 
 type alias Model =
-    { length : Int
+    { config : Config
     , randomTexts : List String
     }
 
 
+setLength : Int -> Model -> Model
+setLength length model =
+    let
+        config =
+            model.config
+    in
+    { model | config = { config | length = length } }
+
+
+setLowerCaseAlphabet : Bool -> Model -> Model
+setLowerCaseAlphabet use model =
+    let
+        config =
+            model.config
+    in
+    { model | config = { config | lowerCaseAlphabet = use } }
+
+
+setUpperCaseAlphabet : Bool -> Model -> Model
+setUpperCaseAlphabet use model =
+    let
+        config =
+            model.config
+    in
+    { model | config = { config | upperCaseAlphabet = use } }
+
+
+setNumber : Bool -> Model -> Model
+setNumber use model =
+    let
+        config =
+            model.config
+    in
+    { model | config = { config | number = use } }
+
+
+setSymbols : String -> Model -> Model
+setSymbols symbols model =
+    let
+        config =
+            model.config
+    in
+    { model | config = { config | symbols = symbols } }
+
+
 type Msg
     = InputLength String
+    | CheckLowerCaseAlphabet Bool
+    | CheckUpperCaseAlphabet Bool
+    | CheckNumber Bool
+    | InputSymbols String
     | Shuffle
     | GenerateRandomTexts (List String)
 
 
 init : Model
 init =
-    { length = 30
+    { config =
+        { length = 30
+        , lowerCaseAlphabet = True
+        , upperCaseAlphabet = True
+        , number = True
+        , symbols = ""
+        }
     , randomTexts = []
     }
 
@@ -49,23 +103,35 @@ update msg model =
             in
             case maybeLength of
                 Just length ->
-                    ( { model | length = length }, Cmd.none )
+                    ( setLength length model, Cmd.none )
 
                 Nothing ->
                     ( model, Cmd.none )
 
+        CheckLowerCaseAlphabet checked ->
+            ( setLowerCaseAlphabet checked model, Cmd.none )
+
+        CheckUpperCaseAlphabet checked ->
+            ( setUpperCaseAlphabet checked model, Cmd.none )
+
+        CheckNumber checked ->
+            ( setNumber checked model, Cmd.none )
+
+        InputSymbols symbols ->
+            ( setSymbols symbols model, Cmd.none )
+
         Shuffle ->
             ( model
-            , Random.generate GenerateRandomTexts (randomTextsGenerator model.length)
+            , Random.generate GenerateRandomTexts (randomTextsGenerator 10 model.config)
             )
 
         GenerateRandomTexts randomTexts ->
             ( { model | randomTexts = randomTexts }, Cmd.none )
 
 
-randomTextsGenerator : Int -> Random.Generator (List String)
-randomTextsGenerator length =
-    Random.list 10 (string length english)
+randomTextsGenerator : Int -> Config -> Random.Generator (List String)
+randomTextsGenerator quantity config =
+    Random.list quantity (randomText config)
 
 
 
@@ -75,25 +141,48 @@ randomTextsGenerator length =
 view : Model -> Html Msg
 view model =
     div []
-        [ section [ class "section" ]
-            [ div [ class "field" ]
-                [ div [ class "control" ]
-                    [ label [ class "label" ] [ text "Length of characters" ]
-                    , input
-                        [ type_ "number"
-                        , step "1"
-                        , class "input"
-                        , style "width" "10rem"
-                        , onInput InputLength
-                        , value (String.fromInt model.length)
-                        ]
-                        []
+        [ contents
+            [ formLabel "Includes"
+            , formGroup
+                [ checkbox
+                    [ onCheck CheckLowerCaseAlphabet
+                    , checked model.config.lowerCaseAlphabet
                     ]
+                    "lower case alphabet"
                 ]
-            , div [ class "field" ]
-                [ div [ class "control" ]
-                    [ button [ class "button is-primary", onClick Shuffle ] [ text "Generate" ]
+            , formGroup
+                [ checkbox
+                    [ onCheck CheckUpperCaseAlphabet
+                    , checked model.config.upperCaseAlphabet
                     ]
+                    "UPPER CASE ALPHABET"
+                ]
+            , formGroup
+                [ checkbox
+                    [ onCheck CheckNumber
+                    , checked model.config.number
+                    ]
+                    "Number"
+                ]
+            , formGroup
+                (inputText
+                    [ style "width" "20rem"
+                    , onInput InputSymbols
+                    , value model.config.symbols
+                    ]
+                    "Symbols"
+                )
+            , formGroup
+                (inputNumber
+                    [ step "1"
+                    , style "width" "10rem"
+                    , onInput InputLength
+                    , value (String.fromInt model.config.length)
+                    ]
+                    "Length of characters"
+                )
+            , formGroup
+                [ buttonMain "Generate" Shuffle
                 ]
             ]
         , section [ class "section" ]
