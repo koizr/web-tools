@@ -66,11 +66,21 @@ setSymbols symbols model =
     { model | config = { config | symbols = symbols } }
 
 
+setExcludeSimilarLetters : Bool -> Model -> Model
+setExcludeSimilarLetters exclude model =
+    let
+        config =
+            model.config
+    in
+    { model | config = { config | excludeSimilarLetters = exclude } }
+
+
 type Msg
     = InputLength String
     | CheckLowerCaseAlphabet Bool
     | CheckUpperCaseAlphabet Bool
     | CheckNumber Bool
+    | CheckExcludeSimilarLetters Bool
     | InputSymbols String
     | Shuffle
     | GenerateRandomTexts (List String)
@@ -84,6 +94,7 @@ init =
         , upperCaseAlphabet = True
         , number = True
         , symbols = ""
+        , excludeSimilarLetters = False
         }
     , randomTexts = []
     }
@@ -116,6 +127,9 @@ update msg model =
 
         CheckNumber checked ->
             ( setNumber checked model, Cmd.none )
+
+        CheckExcludeSimilarLetters checked ->
+            ( setExcludeSimilarLetters checked model, Cmd.none )
 
         InputSymbols symbols ->
             ( setSymbols symbols model, Cmd.none )
@@ -163,6 +177,13 @@ view model =
                     , checked model.config.number
                     ]
                     "Number"
+                ]
+            , formGroup
+                [ checkbox
+                    [ onCheck CheckExcludeSimilarLetters
+                    , checked model.config.excludeSimilarLetters
+                    ]
+                    "Exclude similar letters"
                 ]
             , formGroup
                 (inputText

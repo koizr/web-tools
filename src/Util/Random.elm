@@ -1,6 +1,7 @@
 module Util.Random exposing (Config, randomLetter, randomText)
 
 import Array
+import Html.Attributes exposing (id)
 import Random
 import Util exposing (applyThen, flip)
 
@@ -11,6 +12,7 @@ type alias Config =
     , upperCaseAlphabet : Bool
     , number : Bool
     , symbols : String
+    , excludeSimilarLetters : Bool
     }
 
 
@@ -22,6 +24,7 @@ randomText config =
                 |> applyThen config.lowerCaseAlphabet ((++) lowerCaseAlphabet)
                 |> applyThen config.upperCaseAlphabet ((++) upperCaseAlphabet)
                 |> applyThen config.number ((++) number)
+                |> applyThen config.excludeSimilarLetters (removeSimilar similarLetters)
                 |> (++) config.symbols
     in
     Random.map String.concat (Random.list config.length (randomLetter chars))
@@ -65,3 +68,18 @@ upperCaseAlphabet =
 number : String
 number =
     "1234567890"
+
+
+similarLetters : List String
+similarLetters =
+    List.concatMap identity [ [ "1", "l", "I" ], [ "0", "o", "O" ], [ "9", "q" ] ]
+
+
+removeSimilar : List String -> String -> String
+removeSimilar letters s =
+    case letters of
+        [] ->
+            s
+
+        x :: xs ->
+            removeSimilar xs (String.replace x "" s)
