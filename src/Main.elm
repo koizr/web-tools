@@ -155,8 +155,10 @@ view model =
     { title = "Web tools"
     , body =
         [ div [ class "container" ]
-            [ nav [ class "navbar" ]
-                [ a [ href "/" ] [ text "トップへ戻る" ]
+            [ nav [ class "navbar header" ]
+                [ div [ class "header__logo" ]
+                    [ a [ href "/" ] [ text "Tools" ]
+                    ]
                 ]
             , section [ class "section" ]
                 [ case model.page of

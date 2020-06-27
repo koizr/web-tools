@@ -1,0 +1,16 @@
+.tool-list {
+    &__item {
+        margin: 3rem 0;
+        height: 5rem;
+    }
+    &__link {
+        display: block;
+        font-size: 1.5rem;
+    }
+    &__description {
+        color: #333;
+        font-size: 1rem;
+        margin-top: 0.5rem;
+        margin-left: 0.4rem;
+    }
+}

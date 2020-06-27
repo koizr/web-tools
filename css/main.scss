@@ -1,0 +1,16 @@
+.header {
+    border-bottom: 1px #ddd solid;
+}
+
+.header__logo {
+    margin-left: 1rem;
+    font-size: 1.8rem;
+    height: 4rem;
+    line-height: 4rem;
+    text-transform: uppercase;
+    color: #555;
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+}

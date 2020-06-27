@@ -37,7 +37,13 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-    ul []
-        [ li [] [ a [ href "text" ] [ text "テキスト編集" ] ]
-        , li [] [ a [ href "random" ] [ text "文字列ランダム生成" ] ]
+    ul [ class "tool-list" ]
+        [ li [ class "tool-list__item" ]
+            [ a [ class "tool-list__link", href "text" ] [ text "Sort & Distinct" ]
+            , p [ class "tool-list__description" ] [ text "Sorting and de-duplicating strings." ]
+            ]
+        , li [ class "tool-list__item" ]
+            [ a [ class "tool-list__link", href "random" ] [ text "Random text generator" ]
+            , p [ class "tool-list__description" ] [ text "Generate some random combinations of any letters, numbers and symbols." ]
+            ]
         ]
