@@ -54,4 +54,12 @@ view model =
 
 viewCounterText : Int -> Html Msg
 viewCounterText count =
-    text (String.fromInt count ++ " characters")
+    let
+        unit =
+            if count == 1 then
+                "character"
+
+            else
+                "characters"
+    in
+    text (String.fromInt count ++ " " ++ unit)
