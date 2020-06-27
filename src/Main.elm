@@ -4,6 +4,7 @@ import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Page.CharCounter
 import Page.MultiLineText
 import Page.RandomText
 import Page.Top
@@ -42,6 +43,7 @@ type Page
     | Top Page.Top.Model
     | MultiLineText Page.MultiLineText.Model
     | RandomText Page.RandomText.Model
+    | CharCounter Page.CharCounter.Model
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
@@ -60,6 +62,7 @@ type Msg
     | TopMsg Page.Top.Msg
     | MultiLineTextMsg Page.MultiLineText.Msg
     | RandomTextMsg Page.RandomText.Msg
+    | CharCounterMsg Page.CharCounter.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -118,6 +121,20 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
+        CharCounterMsg pageMsg ->
+            case model.page of
+                CharCounter pageModel ->
+                    let
+                        ( newModel, newCmd ) =
+                            Page.CharCounter.update pageMsg pageModel
+                    in
+                    ( { model | page = CharCounter newModel }
+                    , Cmd.map CharCounterMsg newCmd
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
+
 
 goTo : Maybe Route -> Model -> ( Model, Cmd Msg )
 goTo maybeRoute model =
@@ -133,6 +150,9 @@ goTo maybeRoute model =
 
         Just Route.RandomText ->
             ( { model | page = RandomText Page.RandomText.init }, Cmd.none )
+
+        Just Route.CharCounter ->
+            ( { model | page = CharCounter Page.CharCounter.init }, Cmd.none )
 
 
 
@@ -171,6 +191,9 @@ view model =
 
                     RandomText pageModel ->
                         Page.RandomText.view pageModel |> Html.map RandomTextMsg
+
+                    CharCounter pageModel ->
+                        Page.CharCounter.view pageModel |> Html.map CharCounterMsg
                 ]
             ]
         ]
