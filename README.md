@@ -1,12 +1,3 @@
-## 開発
+# Tools on web
 
-```
-yarn install
-yarn dev
-```
-
-## 本番用ビルド
-
-```
-yarn build
-```
+https://web-tools-koizr.netlify.app/
