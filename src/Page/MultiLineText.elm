@@ -105,7 +105,7 @@ view model =
             [ textarea [ class "textarea", value model.input, cols 60, rows 30, onInput Input ] []
             , div [ style "text-align" "right" ] [ text (numOfLineText model.input) ]
             ]
-        , div [ class "multiline-text__controll-menu" ]
+        , div [ class "multiline-text__control-menu" ]
             [ div [ class "field" ]
                 [ checkbox [ onCheck ChangeUnique ] "unique"
                 ]
