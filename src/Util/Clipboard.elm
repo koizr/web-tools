@@ -1,4 +1,4 @@
-module Util.Clipboard exposing (..)
+module Util.Clipboard exposing (copyToClipboarcOnClick, dataClipboardTarget)
 
 import Html
 import Html.Attributes

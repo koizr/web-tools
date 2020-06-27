@@ -1,7 +1,6 @@
 module Util.Random exposing (Config, randomLetter, randomText)
 
 import Array
-import Html.Attributes exposing (id)
 import Random
 import Util exposing (applyThen, flip)
 

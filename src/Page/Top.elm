@@ -22,12 +22,12 @@ init =
 -- Update
 
 
-type Msg
-    = Init
+type alias Msg =
+    ()
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
+update _ model =
     ( model, Cmd.none )
 
 
@@ -36,7 +36,7 @@ update msg model =
 
 
 view : Model -> Html Msg
-view model =
+view _ =
     ul [ class "tool-list" ]
         [ li [ class "tool-list__item" ]
             [ a [ class "tool-list__link", href "text" ] [ text "Sort & Distinct" ]

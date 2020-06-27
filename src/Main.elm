@@ -4,13 +4,11 @@ import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Http
 import Page.MultiLineText
 import Page.RandomText
 import Page.Top
 import Route exposing (Route)
 import Url
-import Url.Builder
 
 
 
@@ -47,7 +45,7 @@ type Page
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
-init flags url key =
+init _ url key =
     Model key (Top Page.Top.init)
         |> goTo (Route.parse url)
 
