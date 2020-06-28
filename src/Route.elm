@@ -9,12 +9,14 @@ type Route
     | MultiLineText
     | RandomText
     | CharCounter
+    | Tree
 
 
 type alias Paths =
     { multilineText : String
     , randomText : String
     , charCounter : String
+    , tree : String
     }
 
 
@@ -23,6 +25,7 @@ paths =
     { multilineText = "sort"
     , randomText = "random"
     , charCounter = "counter"
+    , tree = "tree"
     }
 
 
@@ -38,4 +41,5 @@ parser =
         , map MultiLineText (s paths.multilineText)
         , map RandomText (s paths.randomText)
         , map CharCounter (s paths.charCounter)
+        , map Tree (s paths.tree)
         ]

@@ -53,6 +53,10 @@ view _ =
               , title = "Charcters counter"
               , description = "Count characters in a text."
               }
+            , { path = paths.tree
+              , title = "File tree generator"
+              , description = "Generate tree diagram."
+              }
             ]
         )
 

@@ -8,6 +8,7 @@ import Page.CharCounter
 import Page.MultiLineText
 import Page.RandomText
 import Page.Top
+import Page.Tree
 import Route exposing (Route)
 import Url
 
@@ -44,6 +45,7 @@ type Page
     | MultiLineText Page.MultiLineText.Model
     | RandomText Page.RandomText.Model
     | CharCounter Page.CharCounter.Model
+    | Tree Page.Tree.Model
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
@@ -63,6 +65,7 @@ type Msg
     | MultiLineTextMsg Page.MultiLineText.Msg
     | RandomTextMsg Page.RandomText.Msg
     | CharCounterMsg Page.CharCounter.Msg
+    | TreeMsg Page.Tree.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -135,6 +138,20 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
+        TreeMsg pageMsg ->
+            case model.page of
+                Tree pageModel ->
+                    let
+                        ( newModel, newCmd ) =
+                            Page.Tree.update pageMsg pageModel
+                    in
+                    ( { model | page = Tree newModel }
+                    , Cmd.map TreeMsg newCmd
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
+
 
 goTo : Maybe Route -> Model -> ( Model, Cmd Msg )
 goTo maybeRoute model =
@@ -153,6 +170,9 @@ goTo maybeRoute model =
 
         Just Route.CharCounter ->
             ( { model | page = CharCounter Page.CharCounter.init }, Cmd.none )
+
+        Just Route.Tree ->
+            ( { model | page = Tree Page.Tree.init }, Cmd.none )
 
 
 
@@ -194,6 +214,9 @@ view model =
 
                     CharCounter pageModel ->
                         Page.CharCounter.view pageModel |> Html.map CharCounterMsg
+
+                    Tree pageModel ->
+                        Page.Tree.view pageModel |> Html.map TreeMsg
                 ]
             ]
         ]
