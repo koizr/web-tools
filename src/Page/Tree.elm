@@ -12,12 +12,17 @@ import Page.MultiLineText exposing (Model)
 
 
 type alias Model =
-    {}
+    { text : String }
+
+
+inputText : String -> Model -> Model
+inputText input model =
+    { model | text = input }
 
 
 init : Model
 init =
-    {}
+    { text = "" }
 
 
 type Msg
@@ -30,7 +35,9 @@ type Msg
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        Input input ->
+            ( inputText input model, Cmd.none )
 
 
 
