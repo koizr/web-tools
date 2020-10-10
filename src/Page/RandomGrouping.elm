@@ -4,6 +4,11 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Page.Element exposing (..)
+import Random
+import Util exposing (divide, flip, zip)
+import Util.List exposing (sortByIndex)
+import Util.String exposing (numOfLines, numOfLinesText)
+import Util.Tuple
 
 
 
@@ -11,14 +16,16 @@ import Page.Element exposing (..)
 
 
 type alias Model =
-    { items : String
+    { numberOfItemsInGroup : String
+    , items : String
     , group : List (List String)
     }
 
 
 init : Model
 init =
-    { items = ""
+    { numberOfItemsInGroup = "3"
+    , items = ""
     , group = []
     }
 
@@ -28,18 +35,54 @@ init =
 
 
 type Msg
-    = InputItems String
-    | Group
+    = InputNumberOfItemsInGroup String
+    | InputItems String
+    | Shuffle
+    | GenerateRandomOrder (List Int)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-        InputItems items ->
-            Debug.todo "implement"
+        InputNumberOfItemsInGroup num ->
+            ( { model | numberOfItemsInGroup = num }, Cmd.none )
 
-        Group ->
-            Debug.todo "implement"
+        InputItems items ->
+            ( { model | items = items }, Cmd.none )
+
+        Shuffle ->
+            ( model
+            , model.items
+                |> numOfLines
+                |> randomOrder
+                |> Random.generate GenerateRandomOrder
+            )
+
+        GenerateRandomOrder order ->
+            let
+                numberOfItems =
+                    String.toInt model.numberOfItemsInGroup
+
+                sortedItems =
+                    if String.isEmpty model.items then
+                        []
+
+                    else
+                        model.items
+                            |> String.lines
+                            |> sortByIndex order
+            in
+            case numberOfItems of
+                Just num ->
+                    ( { model | group = divide num (Debug.log "items" sortedItems) }, Cmd.none )
+
+                Nothing ->
+                    ( model, Cmd.none )
+
+
+randomOrder : Int -> Random.Generator (List Int)
+randomOrder len =
+    Random.list len (Random.int 0 (len * 100))
 
 
 
@@ -50,10 +93,37 @@ view : Model -> Html Msg
 view model =
     div []
         [ div [ class "field" ]
-            [ textarea [ class "textarea", value model.items, cols 60, rows 30, onInput InputItems ] []
-            , div [ style "text-align" "right" ] [ buttonMain "Group" Group ]
+            [ formGroup
+                [ textarea [ class "textarea", value model.items, cols 60, rows 30, onInput InputItems ] []
+                , div [ style "text-align" "right" ] [ text (numOfLinesText model.items) ]
+                ]
+            , formGroup
+                (inputNumber
+                    [ onInput InputNumberOfItemsInGroup
+                    , value model.numberOfItemsInGroup
+                    , style "width" "100px"
+                    ]
+                    "Number of items in one group"
+                )
+            , formGroup [ buttonMain "Group" Shuffle ]
             ]
         , div [ class "field" ]
-            [ textarea [ class "textarea", value model.items, cols 60, rows 30 ] []
-            ]
+            (numbered model.group |> List.map (Util.Tuple.apply viewGroup))
         ]
+
+
+viewGroup : Int -> List String -> Html Msg
+viewGroup groupNo items =
+    div []
+        [ div [] [ text (String.fromInt groupNo) ]
+        , ul []
+            (List.map
+                (\item -> li [] [ text item ])
+                items
+            )
+        ]
+
+
+numbered : List a -> List ( Int, a )
+numbered =
+    List.indexedMap (\i x -> ( i + 1, x ))
