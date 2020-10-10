@@ -74,7 +74,7 @@ update msg model =
             in
             case numberOfItems of
                 Just num ->
-                    ( { model | group = divide num (Debug.log "items" sortedItems) }, Cmd.none )
+                    ( { model | group = divide num sortedItems }, Cmd.none )
 
                 Nothing ->
                     ( model, Cmd.none )
