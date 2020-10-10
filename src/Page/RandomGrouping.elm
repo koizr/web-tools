@@ -91,8 +91,8 @@ randomOrder len =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ div [ class "field" ]
+    div [ class "random-grouping" ]
+        [ div []
             [ formGroup
                 [ textarea [ class "textarea", value model.items, cols 60, rows 30, onInput InputItems ] []
                 , div [ style "text-align" "right" ] [ text (numOfLinesText model.items) ]
@@ -107,16 +107,25 @@ view model =
                 )
             , formGroup [ buttonMain "Group" Shuffle ]
             ]
-        , div [ class "field" ]
-            (numbered model.group |> List.map (Util.Tuple.apply viewGroup))
+        , div [ class "random-grouping__groups" ]
+            (viewGroupHeader model.group ++ (numbered model.group |> List.map (Util.Tuple.apply viewGroup)))
         ]
+
+
+viewGroupHeader : List a -> List (Html Msg)
+viewGroupHeader group =
+    if List.isEmpty group then
+        []
+
+    else
+        [ div [ class "random-grouping__group-header" ] [ text "Groups" ] ]
 
 
 viewGroup : Int -> List String -> Html Msg
 viewGroup groupNo items =
-    div []
-        [ div [] [ text (String.fromInt groupNo) ]
-        , ul []
+    div [ class "random-grouping__group" ]
+        [ div [ class "random-grouping__group-no" ] [ text (String.fromInt groupNo) ]
+        , ul [ class "random-grouping__group-items" ]
             (List.map
                 (\item -> li [] [ text item ])
                 items

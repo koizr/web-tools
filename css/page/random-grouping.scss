@@ -1,0 +1,21 @@
+.random-grouping {
+    &__groups {
+        margin-top: 50px;
+    }
+    &__group-header {
+        font-size: 2rem;
+    }
+    &__group {
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    &__group-no {
+        font-size: 1.2rem;
+        border-bottom: solid 1px #eeeeee;
+        margin-bottom: 10px;
+    }
+    &__group-items {
+        list-style: disc;
+        margin-left: 1.2rem;
+    }
+}
