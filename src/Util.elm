@@ -1,4 +1,4 @@
-module Util exposing (applyThen, flip, zip)
+module Util exposing (applyThen, divide, flip, zip)
 
 {-| 便利関数たち
 -}
@@ -28,3 +28,32 @@ flip f =
 zip : List a -> List b -> List ( a, b )
 zip =
     List.map2 Tuple.pair
+
+
+{-| 一定数ごとに要素を分割する
+-}
+divide : Int -> List a -> List (List a)
+divide n list =
+    case n of
+        0 ->
+            []
+
+        _ ->
+            if n > List.length list then
+                [ list ]
+
+            else
+                case list of
+                    [] ->
+                        []
+
+                    _ ->
+                        let
+                            tail =
+                                if List.length list <= n then
+                                    []
+
+                                else
+                                    divide n (List.drop n list)
+                        in
+                        List.take n list :: tail

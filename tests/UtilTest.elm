@@ -2,7 +2,7 @@ module UtilTest exposing (suit)
 
 import Expect
 import Test exposing (..)
-import Util exposing (applyThen, flip, zip)
+import Util exposing (applyThen, divide, flip, zip)
 
 
 suit : Test
@@ -37,5 +37,15 @@ suit =
                 \_ ->
                     zip [ 2, 3, 4 ] [ "a", "b", "c", "d", "e", "f" ]
                         |> Expect.equal [ ( 2, "a" ), ( 3, "b" ), ( 4, "c" ) ]
+            ]
+        , describe "divide"
+            [ test "divide list by 3 elements" <|
+                \_ ->
+                    divide 3 [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
+                        |> Expect.equal [ [ 1, 2, 3 ], [ 4, 5, 6 ], [ 7, 8, 9 ] ]
+            , test "divide list by 3 elements then extra elements are packed as an element" <|
+                \_ ->
+                    divide 3 [ 1, 2, 3, 4, 5 ]
+                        |> Expect.equal [ [ 1, 2, 3 ], [ 4, 5 ] ]
             ]
         ]
