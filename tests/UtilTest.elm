@@ -47,5 +47,9 @@ suit =
                 \_ ->
                     divide 3 [ 1, 2, 3, 4, 5 ]
                         |> Expect.equal [ [ 1, 2, 3 ], [ 4, 5 ] ]
+            , test "divide empty list then return empty list" <|
+                \_ ->
+                    divide 1 []
+                        |> Expect.equal []
             ]
         ]

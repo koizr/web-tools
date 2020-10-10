@@ -39,15 +39,15 @@ divide n list =
             []
 
         _ ->
-            if n > List.length list then
-                [ list ]
+            case list of
+                [] ->
+                    []
 
-            else
-                case list of
-                    [] ->
-                        []
+                _ ->
+                    if n > List.length list then
+                        [ list ]
 
-                    _ ->
+                    else
                         let
                             tail =
                                 if List.length list <= n then
