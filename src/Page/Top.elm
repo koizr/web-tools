@@ -53,6 +53,10 @@ view _ =
               , title = "Charcters counter"
               , description = "Count characters in a text."
               }
+            , { path = paths.randomGrouping
+              , title = "Random Grouping"
+              , description = "Group items at random."
+              }
             ]
         )
 

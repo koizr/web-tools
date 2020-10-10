@@ -9,20 +9,23 @@ type Route
     | MultiLineText
     | RandomText
     | CharCounter
+    | RandomGrouping
 
 
 type alias Paths =
     { multilineText : String
     , randomText : String
     , charCounter : String
+    , randomGrouping : String
     }
 
 
 paths : Paths
 paths =
     { multilineText = "sort"
-    , randomText = "random"
+    , randomText = "random-text"
     , charCounter = "counter"
+    , randomGrouping = "random-group"
     }
 
 
@@ -38,4 +41,5 @@ parser =
         , map MultiLineText (s paths.multilineText)
         , map RandomText (s paths.randomText)
         , map CharCounter (s paths.charCounter)
+        , map RandomGrouping (s paths.randomGrouping)
         ]
