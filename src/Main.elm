@@ -6,6 +6,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Page.CharCounter
 import Page.MultiLineText
+import Page.RandomGrouping
 import Page.RandomText
 import Page.Top
 import Route exposing (Route)
@@ -44,6 +45,7 @@ type Page
     | MultiLineText Page.MultiLineText.Model
     | RandomText Page.RandomText.Model
     | CharCounter Page.CharCounter.Model
+    | RandomGrouping Page.RandomGrouping.Model
 
 
 init : () -> Url.Url -> Nav.Key -> ( Model, Cmd Msg )
@@ -63,6 +65,7 @@ type Msg
     | MultiLineTextMsg Page.MultiLineText.Msg
     | RandomTextMsg Page.RandomText.Msg
     | CharCounterMsg Page.CharCounter.Msg
+    | RandomGroupingMsg Page.RandomGrouping.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -135,6 +138,20 @@ update msg model =
                 _ ->
                     ( model, Cmd.none )
 
+        RandomGroupingMsg pageMsg ->
+            case model.page of
+                RandomGrouping pageModel ->
+                    let
+                        ( newModel, newCmd ) =
+                            Page.RandomGrouping.update pageMsg pageModel
+                    in
+                    ( { model | page = RandomGrouping newModel }
+                    , Cmd.map RandomGroupingMsg newCmd
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
+
 
 goTo : Maybe Route -> Model -> ( Model, Cmd Msg )
 goTo maybeRoute model =
@@ -153,6 +170,9 @@ goTo maybeRoute model =
 
         Just Route.CharCounter ->
             ( { model | page = CharCounter Page.CharCounter.init }, Cmd.none )
+
+        Just Route.RandomGrouping ->
+            ( { model | page = RandomGrouping Page.RandomGrouping.init }, Cmd.none )
 
 
 
@@ -194,6 +214,9 @@ view model =
 
                     CharCounter pageModel ->
                         Page.CharCounter.view pageModel |> Html.map CharCounterMsg
+
+                    RandomGrouping pageModel ->
+                        Page.RandomGrouping.view pageModel |> Html.map RandomGroupingMsg
                 ]
             ]
         ]
