@@ -5,7 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Page.Element exposing (..)
 import Random
-import Util exposing (divide, flip, zip)
+import Util exposing (divide)
 import Util.List exposing (sortByIndex)
 import Util.String exposing (numOfLines, numOfLinesText)
 import Util.Tuple
